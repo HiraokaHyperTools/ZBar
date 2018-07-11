@@ -150,7 +150,7 @@ int zbar_video_open (zbar_video_t *vdo,
     if((unsigned char)dev[0] < 0x10) {
         /* default linux device, overloaded for other platforms */
         int id = dev[0];
-        dev = ldev = strdup("/dev/video0");
+        dev = ldev = _strdup("/dev/video0");
         ldev[10] = '0' + id;
     }
 
