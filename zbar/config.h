@@ -111,7 +111,7 @@
 #define HAVE_SYS_STAT_H 1
 
 /* Define to 1 if you have the <sys/times.h> header file. */
-#undef HAVE_SYS_TIMES_H 0
+#undef HAVE_SYS_TIMES_H
 
 /* Define to 1 if you have the <sys/time.h> header file. */
 #undef HAVE_SYS_TIME_H

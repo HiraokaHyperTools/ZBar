@@ -194,7 +194,9 @@ int _zbar_window_draw_polygon (zbar_window_t *w,
     win_set_rgb(hdc, rgb);
 
     point_t org = w->scaled_offset;
-    POINT gdipts[npts + 1];
+    POINT gdipts[100 + 1];
+	if (100 < npts)
+		return(0);
     int i;
     for(i = 0; i < npts; i++) {
         point_t p = window_scale_pt(w, pts[i]);

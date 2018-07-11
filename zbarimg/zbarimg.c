@@ -63,6 +63,8 @@
 # endif
 #endif
 
+#include "cximage_for_zbar.h"
+
 static const char *note_usage =
     "usage: zbarimg [options] <image>...\n"
     "\n"
@@ -138,7 +140,7 @@ static int scan_image (const char *filename)
         return(-1);
 
     int found = 0;
-    MagickWand *images = NewMagickWand();
+	MagickWand *images = NewMagickWand();
     if(!MagickReadImage(images, filename) && dump_error(images))
         return(-1);
 

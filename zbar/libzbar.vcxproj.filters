@@ -105,6 +105,9 @@
     <ClInclude Include="qrcode\util.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="window\win.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="config.c">
@@ -192,6 +195,15 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="dllmain.c">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="processor\win.c">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="qrcode\qrdectxt.c">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="window\win.c">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
