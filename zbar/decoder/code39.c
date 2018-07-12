@@ -202,7 +202,7 @@ static inline signed char code39_decode_start (zbar_decoder_t *dcode)
 
     /* check leading quiet zone - spec is 10x */
     unsigned quiet = get_width(dcode, 9);
-    if(quiet && quiet < dcode39->s9 / 2) {
+    if(quiet && quiet < dcode39->s9 / 4) {
         dbprintf(2, " [invalid quiet]\n");
         return(ZBAR_NONE);
     }
