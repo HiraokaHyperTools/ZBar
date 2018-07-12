@@ -124,6 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="config.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="decoder.h" />
     <ClInclude Include="decoder\codabar.h" />

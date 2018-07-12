@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdint.h" />
     <ClInclude Include="xfile.h" />
     <ClInclude Include="ximabmp.h" />
     <ClInclude Include="ximacfg.h" />

@@ -3,11 +3,15 @@
 
 #ifdef __cplusplus
 # define EXTERN_C extern "C"
+# include <string>
 class MagickWand
 {
 public:
 	//! image
 	CxImage image;
+
+	//! filepath
+	std::string filePath;
 
 	//! dtor
 	virtual ~MagickWand()
