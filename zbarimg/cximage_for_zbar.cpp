@@ -22,7 +22,12 @@ bool MagickReadImage(MagickWand *wand, const char *filename)
 
 int MagickGetNumberImages(MagickWand *wand)
 {
-	return wand->image.GetNumFrames();
+	int n = wand->image.GetNumFrames();
+	if (n == 0)
+	{
+		n = 1;
+	}
+	return n;
 }
 
 bool MagickSetImageIndex(MagickWand *wand, int index)
