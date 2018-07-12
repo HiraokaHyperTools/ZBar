@@ -185,7 +185,7 @@
     <ProjectReference Include="..\CxImage\zlib\zlib.vcxproj">
       <Project>{5d1b5573-7d19-468c-a4ef-da583716f370}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\zbar\libzbar.vcxproj">
+    <ProjectReference Include="..\zbar\zbar.vcxproj">
       <Project>{2f4d478c-e999-481b-8acd-378589301d2b}</Project>
     </ProjectReference>
   </ItemGroup>

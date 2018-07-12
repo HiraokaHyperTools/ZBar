@@ -84,7 +84,7 @@ static const unsigned char parity_decode[] = {
     0x0f, /* [3f] AAAAAA = 0 */
 };
 
-#ifdef DEBUG_EAN
+#if defined(DEBUG_EAN) || defined(DEBUG_LEVEL)
 static unsigned char debug_buf[0x18];
 
 static inline const unsigned char *dsprintbuf(ean_decoder_t *ean)
