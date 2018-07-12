@@ -16,8 +16,11 @@ Unicode true
 !system 'MySign "release\zbarimg.exe"'
 !finalize 'MySign "%1"'
 
+!system 'DefineAsmVer.exe "release\zbarimg.exe" "!define VER ""[SFVER]"" " > Tmpver.nsh'
+!include "Tmpver.nsh"
+
 ; The name of the installer
-Name "${APP}"
+Name "${APP} ${VER}"
 
 ; The file to write
 OutFile "Setup_${APP}.exe"
