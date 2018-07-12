@@ -12,6 +12,8 @@ bool MagickReadImage(MagickWand *wand, const char *filename)
 {
 	if (wand->image.Load(filename))
 	{
+		wand->image.AlphaDelete();
+
 		if (wand->image.GrayScale())
 		{
 			return true;
