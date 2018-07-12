@@ -160,25 +160,25 @@
 #define PACKAGE "zbar"
 
 /* Define to the address where bug reports for this package should be sent. */
-#define PACKAGE_BUGREPORT "spadix@users.sourceforge.net"
+#define PACKAGE_BUGREPORT "ku@digitaldolphins.jp"
 
 /* Define to the full name of this package. */
 #define PACKAGE_NAME "zbar"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "zbar 0.10"
+#define PACKAGE_STRING "zbar 0.101"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "zbar"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.10"
+#define PACKAGE_VERSION "0.101"
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "0.10"
+#define VERSION "0.101"
 
 /* Define to 1 if the X Window System is missing or not being used. */
 #define X_DISPLAY_MISSING 1
@@ -187,7 +187,7 @@
 #define ZBAR_VERSION_MAJOR 0
 
 /* Program minor version (after '.') as a number */
-#define ZBAR_VERSION_MINOR 10
+#define ZBAR_VERSION_MINOR 101
 
 /* Define for Solaris 2.5.1 so the uint32_t typedef from <sys/synch.h>,
    <pthread.h>, or <semaphore.h> is not used. If the typedef were allowed, the
