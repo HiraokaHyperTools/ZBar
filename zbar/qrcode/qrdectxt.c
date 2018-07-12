@@ -7,7 +7,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <iconv.h>
+#ifdef HAVE_ICONV
+# include <iconv.h>
+#else
+# include "iconv_win.h"
+#endif
 #include "qrcode.h"
 #include "qrdec.h"
 #include "util.h"

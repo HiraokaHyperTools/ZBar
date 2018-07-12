@@ -63,7 +63,9 @@
 # endif
 #endif
 
-#include "cximage_for_zbar.h"
+#if !defined(HAVE_GRAPHICSMAGICK) && !defined(HAVE_IMAGEMAGICK)
+# include "cximage_for_zbar.h"
+#endif
 
 static const char *note_usage =
     "usage: zbarimg [options] <image>...\n"
