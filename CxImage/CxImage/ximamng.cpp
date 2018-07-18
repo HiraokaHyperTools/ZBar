@@ -136,7 +136,8 @@ static mng_bool mymngsettimer(mng_handle mng, mng_uint32 msecs)
 ////////////////////////////////////////////////////////////////////////////////
 static mng_bool mymngerror(mng_handle mng, mng_int32 code, mng_int8 severity, mng_chunkid chunktype, mng_uint32 chunkseq, mng_int32 extra1, mng_int32 extra2, mng_pchar text)
 {
-	return mng_cleanup(&mng); //<Arkadiy Olovyannikov>
+	//return mng_cleanup(&mng); //<Arkadiy Olovyannikov>
+	return MNG_TRUE;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
