@@ -104,7 +104,9 @@
 
 void mnglcms_initlibrary ()
 {
+#ifdef HAVE_LIBLCMS1
   cmsErrorAction (LCMS_ERROR_IGNORE);  /* LCMS should ignore errors! */
+#endif
 }
 
 /* ************************************************************************** */
@@ -132,14 +134,30 @@ mng_cmsprof mnglcms_createsrgbprofile (void)
                                       {0.3000, 0.6000, 1.0},
                                       {0.1500, 0.0600, 1.0}
                                     };
+#ifdef HAVE_LIBLCMS1
   LPGAMMATABLE    Gamma24[3];
+#elif defined(HAVE_LIBLCMS2)
+  cmsToneCurve* Gamma24[3];
+#endif
   mng_cmsprof     hsRGB;
 
+#ifdef HAVE_LIBLCMS1
   cmsWhitePointFromTemp(6504, &D65);
-  Gamma24[0] = Gamma24[1] = Gamma24[2] = cmsBuildGamma(256, 2.4);
+#elif defined(HAVE_LIBLCMS2)
+  cmsWhitePointFromTemp(&D65, 6504);
+#endif
+  Gamma24[0] = Gamma24[1] = Gamma24[2] =
+#ifdef HAVE_LIBLCMS1 
+	cmsBuildGamma(256, 2.4);
+#elif defined(HAVE_LIBLCMS2)
+	cmsBuildGamma(NULL, 2.4);
+#endif
   hsRGB = cmsCreateRGBProfile(&D65, &Rec709Primaries, Gamma24);
+#ifdef HAVE_LIBLCMS1
   cmsFreeGamma(Gamma24[0]);
-
+#elif defined(HAVE_LIBLCMS2)
+  cmsFreeToneCurve(Gamma24[0]);
+#endif
   return hsRGB;
 }
 
@@ -368,16 +386,22 @@ mng_retcode mng_init_full_cms (mng_datap pData,
 
       pGammatable [0] =                /* and build the lookup tables */
       pGammatable [1] =
-      pGammatable [2] = cmsBuildGamma (256, dGamma);
-
+      pGammatable [2] = 
+#ifdef HAVE_LIBLCMS1
+	cmsBuildGamma (256, dGamma);
+#elif defined(HAVE_LIBLCMS2)
+	cmsBuildGamma(NULL, dGamma);
+#endif
       if (!pGammatable [0])            /* enough memory ? */
         MNG_ERRORL (pData, MNG_LCMS_NOMEM);
                                        /* create the profile */
       hProf = cmsCreateRGBProfile (&sWhitepoint, &sPrimaries, pGammatable);
-
+#ifdef HAVE_LIBLCMS1
       cmsFreeGamma (pGammatable [0]);  /* free the temporary gamma tables ? */
                                        /* yes! but just the one! */
-
+#elif defined(HAVE_LIBLCMS2)
+	  cmsFreeToneCurve(pGammatable [0]);
+#endif
       pData->hProf1 = hProf;           /* save for future use */
 
       if (!hProf)                      /* handle error ? */

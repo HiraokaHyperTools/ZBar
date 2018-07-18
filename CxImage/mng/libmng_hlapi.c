@@ -2275,13 +2275,10 @@ mng_retcode MNG_DECL mng_readdisplay (mng_handle hHandle)
 #endif
     iRetcode = mng_read_graphic (pData);
 
-  if (pData->bEOF == MNG_TRUE)                     /* already at EOF ? */
+  if (pData->bEOF)                     /* already at EOF ? */
   {
     pData->bReading = MNG_FALSE;       /* then we're no longer reading */
     mng_drop_invalid_objects (pData);  /* drop invalidly stored objects */
-  } else {
-	  if (pData->bEOF != MNG_FALSE)
-		  return MNG_UNEXPECTEDEOF;
   }
   
   if (iRetcode)                        /* on error bail out */
