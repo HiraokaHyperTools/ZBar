@@ -1,33 +1,6 @@
 
 #pragma once
 
-#ifdef __cplusplus
-# define EXTERN_C extern "C"
-# include <string>
-class MagickWand
-{
-public:
-	//! image
-	CxImage image;
-
-	//! filepath
-	std::string filePath;
-
-	//! dtor
-	virtual ~MagickWand()
-	{
-
-	}
-};
-#else
-# define EXTERN_C
-# define bool int
-typedef struct
-{
-	int dummy;
-} MagickWand;
-#endif
-
 typedef enum {
 	UndefinedException, WarningException = 300, ResourceLimitWarning = 300, TypeWarning = 305,
 	OptionWarning = 310, DelegateWarning = 315, MissingDelegateWarning = 320, CorruptImageWarning = 325,
@@ -58,6 +31,40 @@ typedef enum
 	FloatPixel,
 	DoublePixel
 } StorageType;
+
+#ifdef __cplusplus
+# define EXTERN_C extern "C"
+# include <string>
+class MagickWand
+{
+public:
+	//! image
+	CxImage image;
+
+	//! filepath
+	std::string filePath;
+
+	//! error type
+	ExceptionType exceptionType = UndefinedException;
+
+	//! error message
+	std::string exceptionMessage;
+
+	//! dtor
+	virtual ~MagickWand()
+	{
+
+	}
+};
+#else
+# include <stdint.h>
+# define EXTERN_C
+typedef uint8_t bool;
+typedef struct
+{
+	int dummy;
+} MagickWand;
+#endif
 
 EXTERN_C
 MagickWand *NewMagickWand();

@@ -35,7 +35,17 @@ bool MagickSetImageIndex(MagickWand *wand, int index)
 		{
 			return true;
 		}
+		else
+		{
+			wand->exceptionType = FilterError;
+		}
 	}
+	else
+	{
+		wand->exceptionType = CorruptImageError;
+	}
+
+	wand->exceptionMessage.assign(wand->image.GetLastError());
 	return false;
 }
 
@@ -81,8 +91,8 @@ void DestroyMagick()
 
 char *MagickGetException(const MagickWand *wand, ExceptionType *severity)
 {
-	*severity = WarningException;
-	return nullptr;
+	*severity = wand->exceptionType;
+	return const_cast<char *>(wand->exceptionMessage.c_str());
 }
 
 void *MagickRelinquishMemory(void *resource)
