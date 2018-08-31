@@ -82,6 +82,7 @@ static const char *note_usage =
     "    -D, --nodisplay disable display of following images (default)\n"
     "    --xml, --noxml  enable/disable XML output format\n"
     "    --raw           output decoded symbol data without symbology prefix\n"
+    "    --gaussianblur  apply GaussianBlur\n"
     "    -S<CONFIG>[=<VALUE>], --set <CONFIG>[=<VALUE>]\n"
     "                    set decoder/scanner <CONFIG> to <VALUE> (or 1)\n"
     // FIXME overlay level
@@ -110,6 +111,7 @@ static const char *xml_foot =
 static int notfound = 0, exit_code = 0;
 static int num_images = 0, num_symbols = 0;
 static int xmllvl = 0;
+static int super = 0;
 
 char *xmlbuf = NULL;
 unsigned xmlbuflen = 0;
@@ -151,7 +153,7 @@ static int scan_image (const char *filename)
         if(exit_code == 3)
             return(-1);
 
-        if(!MagickSetImageIndex(images, seq) && dump_error(images))
+        if(!MagickSetImageIndex(images, seq, super) && dump_error(images))
             return(-1);
 
         zbar_image_t *zimage = zbar_image_create();
@@ -311,6 +313,8 @@ int main (int argc, const char *argv[])
             zbar_set_verbosity(strtol(argv[i] + 10, NULL, 0));
         else if(!strcmp(arg, "--display"))
             display++;
+        else if(!strcmp(arg, "--gaussianblur"))
+            super|=1;
         else if(!strcmp(arg, "--nodisplay") ||
                 !strcmp(arg, "--set") ||
                 !strcmp(arg, "--xml") ||

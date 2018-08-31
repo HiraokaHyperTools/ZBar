@@ -73,7 +73,7 @@ bool MagickReadImage(MagickWand *wand, const char *filename);
 EXTERN_C
 int MagickGetNumberImages(MagickWand *wand);
 EXTERN_C
-bool MagickSetImageIndex(MagickWand *wand, int index);
+bool MagickSetImageIndex(MagickWand *wand, int index, int super);
 EXTERN_C
 unsigned long MagickGetImageWidth(MagickWand *wand);
 EXTERN_C

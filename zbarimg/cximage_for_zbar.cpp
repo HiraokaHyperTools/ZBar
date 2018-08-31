@@ -11,7 +11,7 @@ MagickWand *NewMagickWand()
 bool MagickReadImage(MagickWand *wand, const char *filename)
 {
 	wand->filePath.assign(filename);
-	return MagickSetImageIndex(wand, 0);
+	return MagickSetImageIndex(wand, 0, 0);
 }
 
 int MagickGetNumberImages(MagickWand *wand)
@@ -24,12 +24,17 @@ int MagickGetNumberImages(MagickWand *wand)
 	return n;
 }
 
-bool MagickSetImageIndex(MagickWand *wand, int index)
+bool MagickSetImageIndex(MagickWand *wand, int index, int super)
 {
 	wand->image.SetFrame(index);
 	if (wand->image.Load(wand->filePath.c_str()))
 	{
 		wand->image.AlphaDelete();
+
+		if (super & 1)
+		{
+			wand->image.GaussianBlur();
+		}
 
 		if (wand->image.GrayScale())
 		{
