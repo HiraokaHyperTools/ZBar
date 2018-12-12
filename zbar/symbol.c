@@ -213,13 +213,14 @@ const zbar_symbol_t *zbar_symbol_first_component (const zbar_symbol_t *sym)
 
 
 unsigned base64_encode (char *dst,
-                        const char *src,
+                        const char *srcptr,
                         unsigned srclen)
 {
     static const char alphabet[] =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     char *start = dst;
     int nline = 19;
+    const unsigned char *src = srcptr;
     for(; srclen; srclen -= 3) {
         unsigned int buf = *(src++) << 16;
         if(srclen > 1) buf |= *(src++) << 8;
