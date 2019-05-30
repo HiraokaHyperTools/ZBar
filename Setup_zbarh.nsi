@@ -37,8 +37,6 @@ RequestExecutionLevel admin
 
 XPStyle on
 
-LoadLanguageFile "${NSISDIR}\Contrib\Language files\Japanese-MeiryoUI.nlf"
-
 ;--------------------------------
 
 ; Pages
