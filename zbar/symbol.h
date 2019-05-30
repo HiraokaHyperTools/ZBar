@@ -30,7 +30,7 @@
 #define NUM_SYMS  20
 
 typedef struct point_s {
-    int x, y;
+    int x, y, dx, dy;
 } point_t;
 
 struct zbar_symbol_set_s {
@@ -70,13 +70,17 @@ extern void _zbar_symbol_set_free(zbar_symbol_set_t*);
 
 static inline void sym_add_point (zbar_symbol_t *sym,
                                   int x,
-                                  int y)
+                                  int y,
+                                  int dx,
+                                  int dy)
 {
     int i = sym->npts;
     if(++sym->npts >= sym->pts_alloc)
         sym->pts = realloc(sym->pts, ++sym->pts_alloc * sizeof(point_t));
     sym->pts[i].x = x;
     sym->pts[i].y = y;
+	sym->pts[i].dx = dx;
+	sym->pts[i].dy = dy;
 }
 
 static inline void _zbar_symbol_refcnt (zbar_symbol_t *sym,

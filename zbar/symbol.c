@@ -346,17 +346,19 @@ char *zbar_symbol_xml (const zbar_symbol_t *sym,
     TMPL_COPY(">");
     if (sym->npts >= 1) {
         int x;
-        TMPL_COPY("<pts>");
+        TMPL_COPY("<pts2>");
         for (x = 0; x < (sym->npts); x++) {
             if (x != 0) {
                 TMPL_COPY(" ");
             }
-            TMPL_FMT("%d,%d"
+            TMPL_FMT("%d,%d,%d,%d"
                 , sym->pts[x].x
                 , sym->pts[x].y
+                , sym->pts[x].dx
+                , sym->pts[x].dy
             );
         }
-        TMPL_COPY("</pts>");
+        TMPL_COPY("</pts2>");
     }
     TMPL_COPY("<data");
     if(binary)

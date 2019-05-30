@@ -192,10 +192,10 @@ int qr_code_data_list_extract_text(const qr_code_data_list *_qrlist,
 
       qrdataj=qrdata+sa[j];
       /* expose bounding box */
-      sym_add_point(*sym, qrdataj->bbox[0][0], qrdataj->bbox[0][1]);
-      sym_add_point(*sym, qrdataj->bbox[2][0], qrdataj->bbox[2][1]);
-      sym_add_point(*sym, qrdataj->bbox[3][0], qrdataj->bbox[3][1]);
-      sym_add_point(*sym, qrdataj->bbox[1][0], qrdataj->bbox[1][1]);
+      sym_add_point(*sym, qrdataj->bbox[0][0], qrdataj->bbox[0][1], 0, 16);
+      sym_add_point(*sym, qrdataj->bbox[2][0], qrdataj->bbox[2][1], 0, 17);
+      sym_add_point(*sym, qrdataj->bbox[3][0], qrdataj->bbox[3][1], 0, 18);
+      sym_add_point(*sym, qrdataj->bbox[1][0], qrdataj->bbox[1][1], 0, 19);
 
       /* approx symbol "up" direction */
       dir[0] = (qrdataj->bbox[0][0] - qrdataj->bbox[2][0] +
@@ -410,10 +410,10 @@ int qr_code_data_list_extract_text(const qr_code_data_list *_qrlist,
               syms->datalen = next - syms->datalen - 1;
           }
           if(xmax >= -1) {
-              sym_add_point(sa_sym, xmin, ymin);
-              sym_add_point(sa_sym, xmin, ymax);
-              sym_add_point(sa_sym, xmax, ymax);
-              sym_add_point(sa_sym, xmax, ymin);
+              sym_add_point(sa_sym, xmin, ymin, 0, 16);
+              sym_add_point(sa_sym, xmin, ymax, 0, 17);
+              sym_add_point(sa_sym, xmax, ymax, 0, 18);
+              sym_add_point(sa_sym, xmax, ymin, 0, 19);
           }
       }
       sa_sym->data = sa_text;
