@@ -297,7 +297,7 @@ char *zbar_symbol_xml (const zbar_symbol_t *sym,
         datalen = (sym->datalen + 2) / 3 * 4 + sym->datalen / 57 + 3;
 
     maxlen = (MAX_STATIC + strlen(type) + strlen(orient) +
-              datalen + MAX_INT_DIGITS + 1);
+              datalen + MAX_INT_DIGITS + (20 + 22 * sym->npts) + 1);
     unsigned int mods = sym->modifiers;
     if(mods)
         maxlen += MAX_MOD;
@@ -343,7 +343,22 @@ char *zbar_symbol_xml (const zbar_symbol_t *sym,
     if(sym->cache_count)
         TMPL_FMT(" count='%d'", sym->cache_count);
 
-    TMPL_COPY("><data");
+    TMPL_COPY(">");
+    if (sym->npts >= 1) {
+        int x;
+        TMPL_COPY("<pts>");
+        for (x = 0; x < (sym->npts); x++) {
+            if (x != 0) {
+                TMPL_COPY(" ");
+            }
+            TMPL_FMT("%d,%d"
+                , sym->pts[x].x
+                , sym->pts[x].y
+            );
+        }
+        TMPL_COPY("</pts>");
+    }
+    TMPL_COPY("<data");
     if(binary)
         TMPL_FMT(" format='base64' length='%d'", sym->datalen);
     TMPL_COPY("><![CDATA[");
