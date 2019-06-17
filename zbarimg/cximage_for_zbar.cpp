@@ -31,9 +31,35 @@ bool MagickSetImageIndex(MagickWand *wand, int index, int super)
 	{
 		wand->image.AlphaDelete();
 
-		if (super & 1)
+		if (super & 4)
 		{
-			wand->image.GaussianBlur();
+			switch (wand->image.GetBpp()) {
+			case 1:
+				wand->image.Erode();
+				break;
+			default:
+				wand->image.GaussianBlur();
+				break;
+			}
+		}
+		else
+		{
+			if (super & 1)
+			{
+				wand->image.GaussianBlur();
+			}
+			if (super & 2)
+			{
+				switch (wand->image.GetBpp()) {
+				case 1:
+					break;
+				default:
+					wand->image.Threshold(160);
+					break;
+				}
+
+				wand->image.Erode();
+			}
 		}
 
 		if (wand->image.GrayScale())

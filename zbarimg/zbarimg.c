@@ -36,6 +36,7 @@
 # include <fcntl.h>
 #endif
 #include <assert.h>
+#include <locale.h>
 
 #include <zbar.h>
 
@@ -83,6 +84,8 @@ static const char *note_usage =
     "    --xml, --noxml  enable/disable XML output format\n"
     "    --raw           output decoded symbol data without symbology prefix\n"
     "    --gaussianblur  apply GaussianBlur\n"
+    "    --erode         apply Erode\n"
+    "    --autonorm      apply GaussianBlur for colour, or Erode for mono image\n"
     "    -S<CONFIG>[=<VALUE>], --set <CONFIG>[=<VALUE>]\n"
     "                    set decoder/scanner <CONFIG> to <VALUE> (or 1)\n"
     // FIXME overlay level
@@ -269,6 +272,9 @@ static inline int parse_config (const char *cfgstr, const char *arg)
 
 int main (int argc, const char *argv[])
 {
+#ifdef _WIN32
+    setlocale(LC_ALL, ".ACP");
+#endif
     // option pre-scan
     int quiet = 0;
     int display = 0;
@@ -315,6 +321,10 @@ int main (int argc, const char *argv[])
             display++;
         else if(!strcmp(arg, "--gaussianblur"))
             super|=1;
+        else if(!strcmp(arg, "--erode"))
+            super|=2;
+        else if(!strcmp(arg, "--autonorm"))
+            super|=4;
         else if(!strcmp(arg, "--nodisplay") ||
                 !strcmp(arg, "--set") ||
                 !strcmp(arg, "--xml") ||
