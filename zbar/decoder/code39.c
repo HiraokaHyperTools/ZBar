@@ -143,6 +143,103 @@ static inline unsigned char code39_decode1 (unsigned char enc,
     return(enc);
 }
 
+static int toNarrowWidePattern(zbar_decoder_t *dcode, int reverse)
+{
+    const int numCounters = 9;
+    int maxNarrowCounter = 0;
+    int wideCounters;
+    do
+    {
+        int minCounter = INT_MAX;
+        for (int index = 0; index < 9; index++)
+        {
+            int counter = get_width(dcode, index);
+            if (counter < minCounter && counter > maxNarrowCounter)
+            {
+                minCounter = counter;
+            }
+        }
+        maxNarrowCounter = minCounter;
+        wideCounters = 0;
+        int totalWideCountersWidth = 0;
+        int pattern = 0;
+        for (int index = 0; index < numCounters; index++)
+        {
+            int counter = get_width(dcode, index);
+            if (counter > maxNarrowCounter)
+            {
+                if (reverse) {
+                    pattern |= 1 << (numCounters - 1 - index);
+                }
+                else {
+                    pattern |= 1 << (index);
+                }
+                wideCounters++;
+                totalWideCountersWidth += counter;
+            }
+        }
+        if (wideCounters == 3)
+        {
+            // Found 3 wide counters, but are they close enough in width?
+            // We can perform a cheap, conservative check to see if any individual
+            // counter is more than 1.5 times the average:
+            for (int index = 0; index < numCounters && wideCounters > 0; index++)
+            {
+                int counter = get_width(dcode, index);
+                if (counter > maxNarrowCounter)
+                {
+                    wideCounters--;
+                    // totalWideCountersWidth = 3 * average, so this checks if counter >= 3/2 * average
+                    if ((counter << 1) >= totalWideCountersWidth)
+                    {
+                        return -1;
+                    }
+                }
+            }
+            return pattern;
+        }
+    } while (wideCounters > 3);
+    return -1;
+}
+
+static inline int patternToIndex(unsigned pattern) {
+    static int CHARACTER_ENCODINGS[] = {
+        0x034, 0x121, 0x061, 0x160, 0x031, 0x130, 0x070, 0x025, 0x124, 0x064, // 0-9
+        0x109, 0x049, 0x148, 0x019, 0x118, 0x058, 0x00D, 0x10C, 0x04C, 0x01C, // A-J
+        0x103, 0x043, 0x142, 0x013, 0x112, 0x052, 0x007, 0x106, 0x046, 0x016, // K-T
+        0x181, 0x0C1, 0x1C0, 0x091, 0x190, 0x0D0, 0x085, 0x184, 0x0C4, 0x0A8, // U-$
+        0x0A2, 0x08A, 0x02A // /-%
+    };
+
+    int i;
+    for (i = 0; i < 43; i++)
+    {
+        if (CHARACTER_ENCODINGS[i] == pattern)
+        {
+            return i;
+        }
+    }
+    return i;
+}
+
+static inline signed char code39_decode9_zxing_flavor(zbar_decoder_t *dcode)
+{
+    code39_decoder_t *dcode39 = &dcode->code39;
+
+    if (dcode39->s9 < 9)
+        return(-1);
+
+    int pattern = toNarrowWidePattern(dcode, dcode39->direction);
+    if (pattern == -1)
+        return(-1);
+
+    int idx = patternToIndex(pattern);
+    if (idx == -1)
+        return -1;
+
+    return idx;
+}
+
 static inline signed char code39_decode9 (zbar_decoder_t *dcode)
 {
     code39_decoder_t *dcode39 = &dcode->code39;
@@ -318,7 +415,9 @@ zbar_symbol_type_t _zbar_decode_code39 (zbar_decoder_t *dcode)
         return(ZBAR_NONE);
     }
 
-    signed char c = code39_decode9(dcode);
+    signed char c = TEST_CFG(dcode39->config, ZBAR_CFG_ZXING)
+        ? code39_decode9_zxing_flavor(dcode)
+        : code39_decode9(dcode);
     dbprintf(2, " c=%d", c);
 
     /* lock shared resources */

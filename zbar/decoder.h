@@ -188,7 +188,7 @@ static inline int decode_e (unsigned e,
      * (for use as zero based index)
      * or -1 if invalid
      */
-    unsigned char E = ((e * n * 2 + 1) / s - 3) / 2;
+    unsigned E = ((e * n * 2 + 1) / s - 3) / 2;
     return((E >= n - 3) ? -1 : E);
 }
 

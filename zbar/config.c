@@ -141,6 +141,8 @@ int zbar_parse_config (const char *cfgstr,
         *cfg = ZBAR_CFG_MAX_LEN;
     else if(!strncmp(cfgstr, "ascii", len))
         *cfg = ZBAR_CFG_ASCII;
+    else if(!strncmp(cfgstr, "zxing", len))
+        *cfg = ZBAR_CFG_ZXING;
     else if(!strncmp(cfgstr, "add-check", len))
         *cfg = ZBAR_CFG_ADD_CHECK;
     else if(!strncmp(cfgstr, "emit-check", len))
