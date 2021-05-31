@@ -286,7 +286,7 @@ char *zbar_symbol_xml (const zbar_symbol_t *sym,
                    !strncmp(sym->data, "<?xml", 5));
     for(i = 0; !binary && i < sym->datalen; i++) {
         unsigned char c = sym->data[i];
-        binary = ((c < 0x20 && ((~0x00002600 >> c) & 1)) ||
+        binary = ((c < 0x20 && ((~0x00000000 >> c) & 1)) ||
                   (c >= 0x7f && c < 0xa0) ||
                   (c == ']' && i + 2 < sym->datalen &&
                    sym->data[i + 1] == ']' &&
