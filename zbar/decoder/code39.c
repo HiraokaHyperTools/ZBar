@@ -314,7 +314,8 @@ static inline int code39_postprocess (zbar_decoder_t *dcode)
 {
     code39_decoder_t *dcode39 = &dcode->code39;
     dcode->direction = 1 - 2 * dcode39->direction;
-    int i;
+    int i, written, length, invalidCombination;
+    unsigned char c, next;
     if(dcode39->direction) {
         /* reverse buffer */
         dbprintf(2, " (rev)");
@@ -329,6 +330,110 @@ static inline int code39_postprocess (zbar_decoder_t *dcode)
         dcode->buf[i] = ((dcode->buf[i] < 0x2b)
                          ? code39_characters[(unsigned)dcode->buf[i]]
                          : '?');
+    // This converter taken from ZXing.Net: Code39Reader.cs
+    if (TEST_CFG(dcode39->config, ZBAR_CFG_ASCII)) {
+        length = dcode39->character;
+        written = 0;
+        invalidCombination = 0;
+        for (i = 0; i < length; ) {
+            c = dcode->buf[i++];
+            if (c == '+' || c == '$' || c == '%' || c == '/') {
+                if (i < length) {
+                    next = dcode->buf[i++];
+                    if (0) {}
+                    else if (c == '+') {
+                        if (next >= 'A' && next <= 'Z') {
+                            // "+A" ¨ 'a'
+                            //  ...
+                            // "+Z" ¨ 'z'
+                            dcode->buf[written++] = next + 32;
+                        }
+                        else {
+                            invalidCombination = 1;
+                        }
+                    }
+                    else if (c == '$') {
+                        if (next >= 'A' && next <= 'Z') {
+                            // "$A" ¨ SOH (0x01)
+                            //  ...
+                            // "$Z" ¨ SUB (0x1A)
+                            dcode->buf[written++] = next - 64;
+                        }
+                        else {
+                            invalidCombination = 1;
+                        }
+                    }
+                    else if (c == '%') {
+                        if (0) {}
+                        else if (next >= 'A' && next <= 'E') {
+                            // "%A" ¨ ESC (0x1B)
+                            //  ...
+                            // "%E" ¨ US  (0x1F)
+                            dcode->buf[written++] = next - 38;
+                        }
+                        else if (next >= 'F' && next <= 'J') {
+                            // "%F" ¨ ';' 0x3B
+                            //  ...
+                            // "%J" ¨ '?' 0x3F
+                            dcode->buf[written++] = next - 11;
+                        }
+                        else if (next >= 'K' && next <= 'O') {
+                            // "%K" ¨ '[' 0x5B
+                            //  ...
+                            // "%O" ¨ '_' 0x5F
+                            dcode->buf[written++] = next + 16;
+                        }
+                        else if (next >= 'P' && next <= 'T') {
+                            // "%P" ¨ '{' 0x7B
+                            //  ...
+                            // "%T" ¨ DEL 0x7F
+                            dcode->buf[written++] = next + 43;
+                        }
+                        else if (next == 'U') {
+                            dcode->buf[written++] = 0;
+                        }
+                        else if (next == 'V') {
+                            dcode->buf[written++] = '@';
+                        }
+                        else if (next == 'W') {
+                            dcode->buf[written++] = '`';
+                        }
+                        else if (next == 'X' || next == 'Y' || next == 'Z') {
+                            dcode->buf[written++] = 127;
+                        }
+                        else {
+                            invalidCombination = 1;
+                        }
+                    }
+                    else if (c == '/') {
+                        if (0) {}
+                        else if (next >= 'A' && next <= 'O') {
+                            // "/A" ¨ '!' 0x21
+                            //  ...
+                            // "/O" ¨ '/' 0x2F
+                            dcode->buf[written++] = next - 32;
+                        }
+                        else if (next == 'Z') {
+                            dcode->buf[written++] = ':';
+                        }
+                        else {
+                            invalidCombination = 1;
+                        }
+                    }
+                }
+                else {
+                    invalidCombination = 1;
+                }
+            }
+            else {
+                dcode->buf[written++] = c;
+            }
+        }
+        if (invalidCombination) {
+            return(1);
+        }
+        i = written; // trimming
+    }
     zassert(i < dcode->buf_alloc, -1, "i=%02x %s\n", i,
             _zbar_decoder_buf_dump(dcode->buf, dcode39->character));
     dcode->buflen = i;
